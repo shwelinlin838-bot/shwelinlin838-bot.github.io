@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My First Pi App</title>
-    <!-- Pi SDK -->
-    <script src="https://sdk.mine.pi/pi-sdk.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -39,7 +37,6 @@
         button:hover { background-color: #d4a32c; }
         #user-info { margin-top: 25px; font-weight: bold; color: #196f3d; }
         
-        /* Error နှင့် Debug ပြသရန် နေရာသစ် */
         #debug-box {
             margin-top: 25px;
             padding: 12px;
@@ -62,27 +59,50 @@
         <button id="login-btn" onclick="loginWithPi()">Login with Pi</button>
         <p id="user-info"></p>
         
-        <!-- Debug Logs ခေါင်းစဉ် -->
         <h4 style="margin-top: 25px; color: #666; margin-bottom: 5px;">စနစ်စစ်ဆေးချက် (Debug Logs) -</h4>
         <div id="debug-box">စနစ်စတင်ပတ်နေသည်...</div>
     </div>
 
+    <!-- Pi SDK ဖိုင်ကို Loading အခြေအနေ စောင့်ကြည့်ရန် onload နှင့် onerror ထည့်ထားသည် -->
+    <script src="https://sdk.mine.pi/pi-sdk.js" 
+            onload="sdkLoaded()" 
+            onerror="sdkFailed()"></script>
+
     <script>
-        // Debug စာတန်းပြသပေးမည့် စနစ်
+        let sdkReady = false;
+
         function writeLog(message) {
             const box = document.getElementById("debug-box");
             box.innerHTML += "<br>• " + message;
         }
 
-        try {
-            writeLog("Pi SDK ကို စတင်ချိတ်ဆက်နေပါသည်...");
-            Pi.init({ version: "2.0", sandbox: true });
-            writeLog("Pi SDK Initialize လုပ်ဆောင်ခြင်း အောင်မြင်ပါသည်။");
-        } catch (e) {
-            writeLog("Pi.init လုပ်ရာတွင် Error တက်သွားသည်: " + e.message);
+        writeLog("Pi SDK ဖိုင်ကို စတင်ဆွဲယူနေပါသည် (Loading SDK)...");
+
+        // SDK ဖိုင် ဆွဲယူပြီးမှ Pi.init ကို စတင်ခေါ်ယူမည့် လုပ်ဆောင်ချက်
+        function sdkLoaded() {
+            writeLog("Pi SDK ဖိုင် ဆွဲယူခြင်း (Load) အောင်မြင်ပါပြီ။");
+            try {
+                writeLog("Pi.init လုပ်ဆောင်နေပါသည်...");
+                Pi.init({ version: "2.0", sandbox: true });
+                sdkReady = true;
+                writeLog("Pi.init အောင်မြင်စွာ စတင်ပြီးပါပြီ။");
+            } catch (e) {
+                writeLog("Pi.init လုပ်ရာတွင် Error တက်သွားသည်: " + e.message);
+            }
+        }
+
+        // လိုင်းကျပ်၍သော်လည်းကောင်း၊ တစ်ခုခုကြောင့်သော်လည်းကောင်း SDK ဆွဲမရလျှင် ပြသမည့် လုပ်ဆောင်ချက်
+        function sdkFailed() {
+            writeLog("Error: Pi SDK ဖိုင်ကို လိုင်းပေါ်ကနေ ဆွဲယူ (Load) မရပါ။ အင်တာနက်လိုင်း သို့မဟုတ် DNS ကြောင့် ဖြစ်နိုင်ပါသည်။");
         }
 
         async function loginWithPi() {
+            if (!sdkReady) {
+                writeLog("သတိပေးချက်: Pi SDK အဆင်မသင့်ဖြစ်သေးပါ။ ခဏစောင့်ပြီး ပြန်နှိပ်ပေးပါ။");
+                alert("SDK အဆင်မသင့်ဖြစ်သေးပါ။ ကျေးဇူးပြု၍ ခဏစောင့်ပေးပါ။");
+                return;
+            }
+
             writeLog("Login ခလုတ်နှိပ်ခြင်းကို လက်ခံရရှိပါပြီ။ Authenticate လုပ်နေပါသည်...");
             try {
                 const scopes = ['username', 'payments'];

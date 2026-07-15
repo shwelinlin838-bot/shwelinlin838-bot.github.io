@@ -63,20 +63,16 @@
         <div id="debug-box">စနစ်စတင်ပတ်နေသည်...</div>
     </div>
 
-    <!-- Pi SDK ဖိုင်ကို Loading အခြေအနေ စောင့်ကြည့်ရန် onload နှင့် onerror ထည့်ထားသည် -->
-    <script src="https://sdk.mine.pi/pi-sdk.js" 
-            onload="sdkLoaded()" 
-            onerror="sdkFailed()"></script>
-
+    <!-- ၁။ လုပ်ဆောင်မည့် Function များကို အရင်ဆုံး ကြေညာပေးထားရပါမည် -->
     <script>
         let sdkReady = false;
 
         function writeLog(message) {
             const box = document.getElementById("debug-box");
-            box.innerHTML += "<br>• " + message;
+            if (box) {
+                box.innerHTML += "<br>• " + message;
+            }
         }
-
-        writeLog("Pi SDK ဖိုင်ကို စတင်ဆွဲယူနေပါသည် (Loading SDK)...");
 
         // SDK ဖိုင် ဆွဲယူပြီးမှ Pi.init ကို စတင်ခေါ်ယူမည့် လုပ်ဆောင်ချက်
         function sdkLoaded() {
@@ -91,9 +87,9 @@
             }
         }
 
-        // လိုင်းကျပ်၍သော်လည်းကောင်း၊ တစ်ခုခုကြောင့်သော်လည်းကောင်း SDK ဆွဲမရလျှင် ပြသမည့် လုပ်ဆောင်ချက်
+        // SDK ဆွဲမရလျှင် ပြသမည့် လုပ်ဆောင်ချက်
         function sdkFailed() {
-            writeLog("Error: Pi SDK ဖိုင်ကို လိုင်းပေါ်ကနေ ဆွဲယူ (Load) မရပါ။ အင်တာနက်လိုင်း သို့မဟုတ် DNS ကြောင့် ဖြစ်နိုင်ပါသည်။");
+            writeLog("Error: Pi SDK ဖိုင်ကို ဆွဲယူ (Load) မရပါ။");
         }
 
         async function loginWithPi() {
@@ -119,6 +115,16 @@
                 alert("တစ်ခုခု မှားယွင်းနေပါသည်: " + error.message);
             }
         }
+    </script>
+
+    <!-- ၂။ အပေါ်က Function များကို ဖတ်ပြီးမှ Pi SDK ဖိုင်ကို အောက်နားကနေ စတင်ဆွဲယူပါမည် -->
+    <script src="https://sdk.mine.pi/pi-sdk.js" 
+            onload="sdkLoaded()" 
+            onerror="sdkFailed()"></script>
+    
+    <script>
+        // စတင်ကြောင်း Log ထုတ်ပေးခြင်း
+        writeLog("Pi SDK ဖိုင်ကို စတင်ဆွဲယူနေပါသည် (Loading SDK)...");
     </script>
 </body>
 </html>

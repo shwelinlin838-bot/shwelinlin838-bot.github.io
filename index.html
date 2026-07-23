@@ -1,132 +1,83 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>Pi.init({ version: "2.0,sandbox: true })</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Pi App</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            padding: 40px 20px;
-            background-color: #f3f0f7;
-            color: #333;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: inline-block;
-            max-width: 90%;
-        }
-        h1 { color: #5b2c6f; font-size: 24px; }
-        p { font-size: 16px; line-height: 1.6; }
-        button {
-            background-color: #e2b13c;
-            color: #4a235a;
-            border: none;
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        button:hover { background-color: #d4a32c; }
-        #user-info { margin-top: 25px; font-weight: bold; color: #196f3d; }
-        
-        #debug-box {
-            margin-top: 25px;
-            padding: 12px;
-            background: #fdf2f2;
-            border: 1px solid #f5b0b0;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 12px;
-            color: #c0392b;
-            text-align: left;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My First Pi App</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 40px 20px; background-color: #f3f0f7; color: #333; }
+    .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; max-width: 90%; width: 400px; }
+    h1 { color: #5b2c6f; font-size: 24px; }
+    p { font-size: 16px; line-height: 1.6; }
+    button { background-color: #e2b13c; color: #4a235a; border: none; padding: 14px 28px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    button:hover { background-color: #d4a32c; }
+    #user-info { margin-top: 25px; font-weight: bold; color: #196f3d; }
+    #debug-box { margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 10px; border: 1px solid #ddd; text-align: left; font-size: 14px; word-break: break-all; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My First Pi App</h1>
-        <p>အန်ကယ့်ရဲ့ ပထမဆုံး Pi App လေးကို အောင်မြင်စွာ စတင်လိုက်ပါပြီ။</p>
-        <button id="login-btn" onclick="loginWithPi()">Login with Pi</button>
-        <p id="user-info"></p>
-        
-        <h4 style="margin-top: 25px; color: #666; margin-bottom: 5px;">စနစ်စစ်ဆေးချက် (Debug Logs) -</h4>
-        <div id="debug-box">စနစ်စတင်ပတ်နေသည်...</div>
-    </div>
 
-    <!-- ၁။ လုပ်ဆောင်မည့် Function များကို အရင်ဆုံး ကြေညာပေးထားရပါမည် -->
-    <script>
-        let sdkReady = false;
-
-        function writeLog(message) {
-            const box = document.getElementById("debug-box");
-            if (box) {
-                box.innerHTML += "<br>• " + message;
-            }
-        }
-
-        // SDK ဖိုင် ဆွဲယူပြီးမှ Pi.init ကို စတင်ခေါ်ယူမည့် လုပ်ဆောင်ချက်
-        function sdkLoaded() {
-            writeLog("Pi SDK ဖိုင် ဆွဲယူခြင်း (Load) အောင်မြင်ပါပြီ။");
-            try {
-                writeLog("Pi.init လုပ်ဆောင်နေပါသည်...");
-                Pi.init({ version: "2.0", sandbox: true });
-                sdkReady = true;
-                writeLog("Pi.init အောင်မြင်စွာ စတင်ပြီးပါပြီ။");
-            } catch (e) {
-                writeLog("Pi.init လုပ်ရာတွင် Error တက်သွားသည်: " + e.message);
-            }
-        }
-
-        // SDK ဆွဲမရလျှင် ပြသမည့် လုပ်ဆောင်ချက်
-        function sdkFailed() {
-            writeLog("Error: Pi SDK ဖိုင်ကို ဆွဲယူ (Load) မရပါ။");
-        }
-
-        async function loginWithPi() {
-            if (!sdkReady) {
-                writeLog("သတိပေးချက်: Pi SDK အဆင်မသင့်ဖြစ်သေးပါ။ ခဏစောင့်ပြီး ပြန်နှိပ်ပေးပါ။");
-                alert("SDK အဆင်မသင့်ဖြစ်သေးပါ။ ကျေးဇူးပြု၍ ခဏစောင့်ပေးပါ။");
-                return;
-            }
-
-            writeLog("Login ခလုတ်နှိပ်ခြင်းကို လက်ခံရရှိပါပြီ။ Authenticate လုပ်နေပါသည်...");
-            try {
-                const scopes = ['username', 'payments'];
-                function onIncompletePaymentFound(payment) {
-                    writeLog("မပြီးပြတ်သေးသော ငွေပေးချေမှု တွေ့ရှိသည်: " + JSON.stringify(payment));
-                }
-                
-                const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
-                writeLog("Authenticate အောင်မြင်ပါသည်! User: @" + auth.user.username);
-                document.getElementById("user-info").innerText = "မင်္ဂလာပါ Pi User: @" + auth.user.username;
-                alert("Pi အကောင့် ချိတ်ဆက်မှု အောင်မြင်သည် - @" + auth.user.username);
-            } catch (error) {
-                writeLog("Authenticate Error ဖြစ်သွားသည်: " + error.message);
-                alert("တစ်ခုခု မှားယွင်းနေပါသည်: " + error.message);
-            }
-        }
-    </script>
-
-    <!-- ၂။ အပေါ်က Function များကို ဖတ်ပြီးမှ Pi SDK ဖိုင်ကို အောက်နားကနေ စတင်ဆွဲယူပါမည် -->
-    <script src="https://sdk.mine.pi/pi-sdk.js" 
-            onload="sdkLoaded()" 
-            onerror="sdkFailed()"></script>
+  <div class="container">
+    <h1>Welcome to My First Pi App</h1>
+    <p>အန်ကယ့်ရဲ့ ပထမဆုံး Pi App လေးကို အောင်မြင်စွာ စတင်လိုက်ပါပြီ။</p>
     
-    <script>
-        // စတင်ကြောင်း Log ထုတ်ပေးခြင်း
-        writeLog("Pi SDK ဖိုင်ကို စတင်ဆွဲယူနေပါသည် (Loading SDK)...");
-    </script>
+    <button onclick="loginWithPi()">Login with Pi</button>
+    <div id="user-info"></div>
+
+    <div id="debug-box">
+      <strong>စနစ်စစ်ဆေးချက် (Debug Logs):</strong><br>
+      <div id="log-content">• စနစ်စတင်နေသည်...<br></div>
+    </div>
+  </div>
+
+  <!-- ၁။ Function များကို အရင် သတ်မှတ်ခြင်း -->
+  <script>
+    let sdkReady = false;
+
+    function writeLog(msg) {
+      const logDiv = document.getElementById('log-content');
+      if (logDiv) logDiv.innerHTML += '• ' + msg + '<br>';
+    }
+
+    // Pi SDK ဖိုင် ဒေါင်းလုဒ် ဆွဲပြီးမှ ခေါ်ယူမည့် Function
+    function sdkLoaded() {
+      try {
+        Pi.init({ version: "2.0", sandbox: true });
+        sdkReady = true;
+        writeLog('<span style="color:green;">Pi SDK ဖိုင်ကို အောင်မြင်စွာ ဆွဲယူပြီးပါပြီ!</span>');
+      } catch(e) {
+        writeLog('<span style="color:red;">Pi.init အမှား: ' + e.message + '</span>');
+      }
+    }
+
+    function sdkFailed() {
+      writeLog('<span style="color:red;">Error: Pi SDK ဖိုင်ကို ဆွဲယူ (Load) မရပါ။</span>');
+    }
+
+    async function loginWithPi() {
+      if (!sdkReady || !window.Pi) {
+        alert("SDK အဆင်မသင့်ဖြစ်သေးပါ။ ခဏစောင့်ပြီး ပြန်နှိပ်ပေးပါ။");
+        return;
+      }
+      writeLog("Login ခလုတ်နှိပ်ခြင်းကို လက်ခံရရှိပါပြီ။ Authenticate လုပ်နေသည်...");
+      try {
+        const scopes = ['username', 'payments'];
+        function onIncompletePaymentFound(payment) {
+          writeLog("မပြီးပြတ်သေးသော ငွေပေးချေမှု တွေ့ရှိသည်: " + JSON.stringify(payment));
+        }
+        const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
+        writeLog('<span style="color:green;">Authenticate အောင်မြင်ပါသည်။ User: @' + auth.user.username + '</span>');
+        document.getElementById("user-info").innerText = "မင်္ဂလာပါ Pi User: @" + auth.user.username;
+        alert("Pi အကောင့် ချိတ်ဆက်မှု အောင်မြင်ပါသည် - @" + auth.user.username);
+      } catch (error) {
+        writeLog('<span style="color:red;">Authenticate Error ဖြစ်သွားပါသည်: ' + error.message + '</span>');
+        alert("တစ်ခုခု မှားယွင်းနေပါသည်: " + error.message);
+      }
+    }
+  </script>
+
+  <!-- ၂။ Function များ ဖတ်ပြီးမှ Pi SDK ကို အောက်ဆုံးတွင် Load လုပ်ခြင်း -->
+  <script src="https://sdk.minepi.com/pi-sdk.js" onload="sdkLoaded()" onerror="sdkFailed()"></script>
+
 </body>
 </html>

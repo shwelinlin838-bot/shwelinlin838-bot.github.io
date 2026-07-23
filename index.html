@@ -35,6 +35,7 @@
 
   <script>
     let sdkReady = false;
+    const API_KEY = "64qkpviopkhj8mkfn6nu00kopqttygcylsjw4yerfdsybkjbg27tfs1aourdq8cu";
 
     function writeLog(msg) {
       const logDiv = document.getElementById('log-content');
@@ -88,12 +89,34 @@
       };
 
       const paymentCallbacks = {
-        onReadyForServerApproval: function(paymentId) {
+        onReadyForServerApproval: async function(paymentId) {
           writeLog("Payment Ready For Approval: " + paymentId);
+          try {
+            let res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/approve`, {
+              method: 'POST',
+              headers: { 'Authorization': `Key ${API_KEY}` }
+            });
+            writeLog('<span style="color:blue;">Server မှ အလိုအလျောက် Approve လုပ်ပေးလိုက်ပါပြီ!</span>');
+          } catch(e) {
+            writeLog('<span style="color:red;">Approve Error: ' + e.message + '</span>');
+          }
         },
-        onReadyForServerCompletion: function(paymentId, txid) {
-          writeLog('<span style="color:green;">Transaction အောင်မြင်ပါပြီ! TxID: ' + txid + '</span>');
-          alert("စမ်းသပ် ငွေပေးချေမှု အောင်မြင်သွားပါပြီ!");
+        onReadyForServerCompletion: async function(paymentId, txid) {
+          writeLog("Payment Ready For Completion...");
+          try {
+            let res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/complete`, {
+              method: 'POST',
+              headers: { 
+                'Authorization': `Key ${API_KEY}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ txid: txid })
+            });
+            writeLog('<span style="color:green;">Transaction အောင်မြင်ပါပြီ! TxID: ' + txid + '</span>');
+            alert("စမ်းသပ် ငွေပေးချေမှု အောင်မြင်သွားပါပြီ!");
+          } catch(e) {
+            writeLog('<span style="color:red;">Completion Error: ' + e.message + '</span>');
+          }
         },
         onCancel: function(paymentId) {
           writeLog("Payment Cancelled");
